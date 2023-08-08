@@ -1,0 +1,47 @@
+[
+    {
+        "id": "1",
+        "timeStamp": "08/01/23",
+        "tipo": "LOG",
+        "name": "Pedro Martin",
+        "motivo": "Inicio de sesion exitoso",
+        "sistema": "Cotiza",
+        "acciones": "Ver Detalles"
+    },
+    {
+        "id": "2",
+        "timeStamp": "08/01/23",
+        "tipo": "LOG",
+        "name": "Lucio Bertolibi",
+        "motivo": "Inicio de sesion fallido",
+        "sistema": "Farma",
+        "acciones": "Ver Detalles"
+    },
+    {
+        "id": "2",
+        "timeStamp": "08/01/23",
+        "tipo": "LOG",
+        "name": "Andres dordi",
+        "motivo": "Inicio de sesion exitoso",
+        "sistema": "Labora",
+        "acciones": "Ver Detalles"
+    },
+    {
+        "id": "4",
+        "timeStamp": "08/01/23",
+        "tipo": "LOG",
+        "name": "Lucio Bertolibi",
+        "motivo": "Cierre por inactividad",
+        "sistema": "Farma",
+        "acciones": "Ver Detalles"
+    },
+    {
+        "id": "5",
+        "timeStamp": "08/01/23",
+        "tipo": "ERROR",
+        "name": "Andres dordi",
+        "motivo": "Inicio de sesion exitoso",
+        "sistema": "Labora",
+        "acciones": "Ver Detalles"
+    }
+]
