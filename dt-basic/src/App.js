@@ -129,9 +129,9 @@ const columns = [
   {
     name: 'ACCIONES',
     selector: row => row.acciones
+
   },
-
-
+  
 ]
 function App() {
   return (
