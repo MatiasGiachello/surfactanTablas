@@ -1,10 +1,12 @@
+import { Component } from 'react';
 import './App.css';
-import './user.json';
-import React, { useState, useEffect } from 'react';
-import DataTable, { createTheme } from 'react-data-table-component';
-import 'styled-components'
-import SearchComponent from './SearchComponent/SearchComponent';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import DataTable from 'react-data-table-component';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faSearch } from "@fortawesome/free-solid-svg-icons"
 
+//import React, { useState, useEffect } from 'react';
+//import 'styled-components'
 
 const data = [
   {
@@ -88,144 +90,279 @@ const data = [
     sistema: "Farma",
     acciones: "Ver Detalles"
   },
+  {
+    id: 9,
+    timeStamp: "09/08/23",
+    tipo: "MODIFI",
+    name: "Andres dordi",
+    motivo: "Inicio de sesion exitoso",
+    sistema: "Labora",
+    acciones: "Ver Detalles"
+  },
+  {
+    id: 10,
+    timeStamp: "11/08/23",
+    tipo: "ERROR",
+    name: "Pedro Martin",
+    motivo: "Inicio de sesion exitoso",
+    sistema: "Farma",
+    acciones: "Ver Detalles"
+  },
+  {
+    id: 11,
+    timeStamp: "10/07/21",
+    tipo: "MODIFI",
+    name: "Lucio Bertolini",
+    motivo: "generacion de tickets de Sistema ",
+    sistema: "Cotiza",
+    acciones: "Ver Detalles"
+  },
+  {
+    id: 12,
+    timeStamp: "04/09/23",
+    tipo: "ERROR",
+    name: "Andres dordi",
+    motivo: "inicio de sesion",
+    sistema: "Labora",
+    acciones: "Ver Detalles"
+  },
+  {
+    id: 13,
+    timeStamp: "08/03/23",
+    tipo: "LOG",
+    name: "Lucio bertolini",
+    motivo: "Cierre de Sesion por inactividad",
+    sistema: "Farma",
+    acciones: "Ver Detalles"
+  },
+  {
+    id:14,
+    timeStamp: "12/05/23",
+    tipo: "MODIFI",
+    name: "Pedro Martin",
+    motivo: "Cierre de sesion de manera exitosa",
+    sistema: "Farma",
+    acciones: "Ver Detalles"
+  },
 
 ]
+const paginacionOpciones = {
+  rowsPerPageText: 'Filas por Página',
+  rangeSeparatorText: 'de',
+  selectAllRowsItem: true,
+  selectAllRowsItemText: 'Todos',
+}
 
-// const App = () => {
-//   const [users, setUsers] = useState([])
+class App extends Component {
+  state = {
+    busqueda: '',
+    empleados: [],
+    columnas: []
+  }
+  onChange = async e => {
+    e.persist();
+    await this.setState({ busqueda: e.target.value });
+    this.filtrarElementos();
+  }
+  asignarColumnas = () => {
+    const columnas = [
+      {
+        name: 'TIMESTAMP',
+        selector: row => row.timeStamp
+      },
+      {
+        name: 'TIPO',
+        selector: row => row.tipo
+      },
+      {
+        name: 'NAME',
+        selector: row => row.name
+      },
+      {
+        name: 'MOTIVO',
+        selector: row => row.motivo
+      },
+      {
+        name: 'SISTEMA',
+        selector: row => row.sistema
+      },
+      {
+        name: 'ACCIONES',
+        selector: row => row.acciones
+      }
+    ];
+    this.setState({ columnas: columnas });
+  }
 
-//   const = './user.json'
-//   const showData = async () => {
-//     const response = await fetch(URL)
-//     const data = await response.json()
-//     console.log(data)
-//     setUsers(data)
-//   }
 
-//   useEffect(() => {
-//     showData()
-//   }, [])
+  filtrarElementos = () => {
+    var search = data.filter(item => {
+      if (
+        item.timeStamp.toLowerCase().includes(this.state.busqueda) ||
+        item.tipo.toLowerCase().includes(this.state.busqueda) ||
+        item.name.toLowerCase().includes(this.state.busqueda) ||
+        item.motivo.toLowerCase().includes(this.state.busqueda) ||
+        item.sistema.toLowerCase().includes(this.state.busqueda) ||
+        item.acciones.toLowerCase().includes(this.state.busqueda)
+      ) {
+        return true;
+      }
+      return false;
+    });
 
-const columns = [
-  {
-    name: 'TIMESTAMP',
-    selector: row => row.timeStamp
-  },
-  {
-    name: 'TIPO',
-    selector: row => row.tipo
-  },
-  {
-    name: 'NAME',
-    selector: row => row.name
-  },
-  {
-    name: 'MOTIVO',
-    selector: row => row.motivo
-  },
-  {
-    name: 'SISTEMA',
-    selector: row => row.sistema
-  },
-  {
-    name: 'ACCIONES',
-    selector: row => row.acciones
+    this.setState({ empleados: search });
+  }
 
-  },
-  
-]
-function App() {
-  return (
-    <div className="App">
+  crearIndex = () => {
+    var contador = 1;
+    data.map(elemento => {
+      elemento["id"] = contador;
+      contador++;
+      return elemento;
+    });
+  }
 
-      <DataTable
-        columns={columns}
-        data={data}
-      />
-    </div>
-  );
+  componentDidMount() {
+    this.crearIndex();
+    this.asignarColumnas();
+    this.setState({ empleados: data });
+  }
+
+  render() {
+    return (
+      <div className="table-responsive">
+        <div className="barraBusqueda">
+          <input
+            type="text"
+            placeholder="Buscar"
+            className="textField"
+            name="busqueda"
+            value={this.state.busqueda}
+            onChange={this.onChange}
+          />
+          <button type="button" className="btnBuscar" /*onClick={onClear}*/>
+            {" "}
+            <FontAwesomeIcon icon={faSearch} />
+          </button>
+        </div>
+        <DataTable
+          columns={this.state.columnas}
+          data={this.state.empleados}
+          title="Surfactan"
+          pagination
+          paginationComponentOptions={paginacionOpciones}
+          fixedHeader
+          fixedHeaderScrollHeight="600px"
+          noDataComponent={<span>No se encontró ningún elemento</span>}
+        />
+      </div>
+    )
+  }
 }
 
 
-// const data = [
-//   {
-//     id: 1,
-//     timeStamp: '08/01/23',
-//     tipo: 'LOG',
-//     name: 'Pedro Martin',
-//     motivo: 'Inicio de sesion exitoso',
-//     sistema: 'Cotiza',
-//     acciones: 'Ver Detalles',
-//   },
-//   {
-//     id: 2,
-//     timeStamp: '08/01/23',
-//     tipo: 'LOG',
-//     name: 'Lucio Bertolini',
-//     motivo: 'Inicio de sesion Fallido',
-//     sistema: 'farma',
-//     acciones: 'Ver Detalles',
-//   },
-//   {
-//       id: 3,
-//       timeStamp: '08/01/23',
-//       tipo: 'LOG',
-//       name: 'Andres Dordi',
-//       motivo: 'Inicio de sesion exitoso',
-//       sistema: 'Cotiza',
-//       acciones: 'Ver Detalles',
-//     },
-//     {
-//     id: 4,
-//     timeStamp: '08/01/23',
-//     tipo: 'MODIFI',
-//     name: 'Andres Dordi',
-//     motivo: 'Cierre por inactividad',
-//     sistema: 'farma',
-//     acciones: 'Ver Detalles',
-//   },
-//   {
-//     id: 5,
-//     timeStamp: '08/01/23',
-//     tipo: 'ERROR',
-//     name: 'Andres Dordi',
-//     motivo: 'Cierre de sesion del usuario',
-//     sistema: 'Labora',
-//     acciones: 'Ver Detalles',
-//   },
-// ]
-
-// const columns = [
-//   {
-//     name: 'TIMESTAMP',
-//     selector: row => row.timeStamp
-//   },
-//   {
-//     name: 'TIPO',
-//     selector: row => row.tipo
-//   },
-//   {
-//     name: 'NAME',
-//     selector: row => row.name
-//   },
-//   {
-//     name: 'MOTIVO',
-//     selector: row => row.motivo
-//   },
-//   {
-//     name: 'SISTEMA',
-//     selector: row => row.sistema
-//   },
-//   {
-//     name: 'ACCIONES',
-//     selector: row => row.acciones
-//   },
-// ]
-
-
-
-
-
-
-
 export default App;
+
+
+    //     class App extends Component {
+    //   render()[
+    //     return(
+    //     <div className = "App" >
+
+    //       <DataTable
+    //         columns={columns}
+    //         data={data}
+    //       />
+    //     </div>
+    //   );
+    // ]
+
+    // const data = [
+    //   {
+    //     id: 1,
+    //     timeStamp: '08/01/23',
+    //     tipo: 'LOG',
+    //     name: 'Pedro Martin',
+    //     motivo: 'Inicio de sesion exitoso',
+    //     sistema: 'Cotiza',
+    //     acciones: 'Ver Detalles',
+    //   },
+    //   {
+    //     id: 2,
+    //     timeStamp: '08/01/23',
+    //     tipo: 'LOG',
+    //     name: 'Lucio Bertolini',
+    //     motivo: 'Inicio de sesion Fallido',
+    //     sistema: 'farma',
+    //     acciones: 'Ver Detalles',
+    //   },
+    //   {
+    //       id: 3,
+    //       timeStamp: '08/01/23',
+    //       tipo: 'LOG',
+    //       name: 'Andres Dordi',
+    //       motivo: 'Inicio de sesion exitoso',
+    //       sistema: 'Cotiza',
+    //       acciones: 'Ver Detalles',
+    //     },
+    //     {
+    //     id: 4,
+    //     timeStamp: '08/01/23',
+    //     tipo: 'MODIFI',
+    //     name: 'Andres Dordi',
+    //     motivo: 'Cierre por inactividad',
+    //     sistema: 'farma',
+    //     acciones: 'Ver Detalles',
+    //   },
+    //   {
+    //     id: 5,
+    //     timeStamp: '08/01/23',
+    //     tipo: 'ERROR',
+    //     name: 'Andres Dordi',
+    //     motivo: 'Cierre de sesion del usuario',
+    //     sistema: 'Labora',
+    //     acciones: 'Ver Detalles',
+    //   },
+    // ]
+
+    // const columns = [
+    //   {
+    //     name: 'TIMESTAMP',
+    //     selector: row => row.timeStamp
+    //   },
+    //   {
+    //     name: 'TIPO',
+    //     selector: row => row.tipo
+    //   },
+    //   {
+    //     name: 'NAME',
+    //     selector: row => row.name
+    //   },
+    //   {
+    //     name: 'MOTIVO',
+    //     selector: row => row.motivo
+    //   },
+    //   {
+    //     name: 'SISTEMA',
+    //     selector: row => row.sistema
+    //   },
+    //   {
+    //     name: 'ACCIONES',
+    //     selector: row => row.acciones
+    //   },
+    // ]
+
+    // const App = () => {
+    //   const [users, setUsers] = useState([])
+
+    //   const = './user.json'
+    //   const showData = async () => {
+    //     const response = await fetch(URL)
+    //     const data = await response.json()
+    //     console.log(data)
+    //     setUsers(data)
+    //   }
+
+    //   useEffect(() => {
+    //     showData()
+    //   }, [])
