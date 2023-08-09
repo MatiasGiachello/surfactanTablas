@@ -7,16 +7,40 @@ const SearchComponent = () => {
     const [search, setSearch] = useEffect("")
 
 
-    //const necesito tarer los datos de mi user.json
+    //const necesito traer los datos de mi user.json
 
-    const showData = async ( )=>{
+    const showData = async () => {
         const response = await fetch //(user.json)
         const data = await response.json()
-        console.log(data)
+        setUsers(data)
+        //console.log(data)
     }
-    showData()
+
+
+    const searcher = (e) => {
+        setSearch(e.target.value)
+        //console.log(e.target.value)
+    }
+    let results = []
+    if (!search) {
+        results = users
+    } else {
+        users.filter((dato) =>
+            dato.name.toLoweCase(). includes (search.toLocaletLowerCase())
+        )
+    }
+
+
+    useEffect(() => {
+        showData()
+    }, [])
+
+    //console.log("Bienvenidos")
     return (
-        <div> SearchComponent </div>
+        <div>
+            <input value={search} onChange={searcher} type='text' placeholder='Search' className='form-control' />
+
+        </div>
     )
 
 

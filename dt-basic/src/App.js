@@ -3,6 +3,7 @@ import './user.json';
 import React, { useState, useEffect } from 'react';
 import DataTable, { createTheme } from 'react-data-table-component';
 import 'styled-components'
+import SearchComponent from './SearchComponent/SearchComponent';
 
 
 const data = [
