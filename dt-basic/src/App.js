@@ -4,6 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import DataTable from 'react-data-table-component';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSearch } from "@fortawesome/free-solid-svg-icons"
+import TiposFiltro from './components/TiposFiltro/TiposFiltro';
+import TiposSistemaFiltro from './components/tiposSistema/tiposSistema';
+import RangoFechasFiltro from './components/filtradoFechas/filtradoFechas';
 
 //import React, { useState, useEffect } from 'react';
 //import 'styled-components'
@@ -136,7 +139,7 @@ const data = [
     acciones: "Ver Detalles"
   },
   {
-    id:14,
+    id: 14,
     timeStamp: "12/05/23",
     tipo: "MODIFI",
     name: "Pedro Martin",
@@ -157,8 +160,14 @@ class App extends Component {
   state = {
     busqueda: '',
     empleados: [],
-    columnas: []
+    columnas: [],
+    empleadosFiltrados: []
+  };
+
+  actualizarElementosFiltrados = (elementosFiltrados) => {
+    this.setState({ empleadosFiltrados: elementosFiltrados });
   }
+
   onChange = async e => {
     e.persist();
     await this.setState({ busqueda: e.target.value });
@@ -255,7 +264,13 @@ class App extends Component {
           fixedHeaderScrollHeight="600px"
           noDataComponent={<span>No se encontró ningún elemento</span>}
         />
+        <div className="tiposFiltroContainer">
+          <TiposFiltro />
+        </div>
+        <TiposSistemaFiltro />
+        <RangoFechasFiltro data={this.state.empleados} actualizarElementosFiltrados={this.actualizarElementosFiltrados} />
       </div>
+
     )
   }
 }
